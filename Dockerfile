@@ -11,10 +11,11 @@ RUN apt-get -yqq update \
          iproute gawk grep sed net-tools iptables \
          bsdmainutils libcurl3-nss \
          strongswan rsyslog ppp libpcap0.8 privoxy \
-         xl2tpd
+         xl2tpd vim libstrongswan-extra-plugins cifs-utils
 
 COPY app /app
 RUN find /app -name run.sh | xargs chmod u+x
+RUN mkdir /mnt/network_share
 
 EXPOSE 8040
 

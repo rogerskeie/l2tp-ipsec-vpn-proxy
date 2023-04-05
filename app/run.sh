@@ -108,6 +108,7 @@ conn %default
   esp=aes128-sha1-modp1024,3des-sha1-modp1024!
 
 conn myvpn
+  esp=aes128-sha1
   keyexchange=ikev1
   left=%defaultroute
   auto=add

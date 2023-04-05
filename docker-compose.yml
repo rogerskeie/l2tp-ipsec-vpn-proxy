@@ -6,12 +6,20 @@ services:
       - 1.1.1.1
       - 1.0.0.1
     environment:
-      - VPN_PUBLIC_IP=vpn.xxxx.com
-      - VPN_LOCAL_IP=192.168.0.2
-      - VPN_IPSEC_PSK=xxxx
-      - VPN_USER=xxxx
-      - VPN_PASSWORD=xxxx
+      - VPN_PUBLIC_IP=$VPN_PUBLIC_IP
+      - VPN_LOCAL_IP=$VPN_LOCAL_IP
+      - VPN_IPSEC_PSK=$VPN_IPSEC_PSK
+      - VPN_USER=$VPN_USER
+      - VPN_PASSWORD=$VPN_PASSWORD
     ports:
-      - 8040:8040
+      - ${PROXY_SOCKS5_PORT}:1080
+      - ${PROXY_HTTP_PORT}:8040
+    volumes:
+      - $SHARED_FOLDER:/shared
     restart: always
     privileged: true
+  socks5:
+    image: serjs/go-socks5-proxy
+    depends_on:
+      - vpn_proxy
+    network_mode: "service:vpn_proxy"
