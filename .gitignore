@@ -364,5 +364,8 @@ buildNumber.properties
 # .env file
 .env
 
-# Default host <-> container shared folder
-shared/
+# Samba config file
+smb.conf
+
+# Script for mounting remote site network share
+mount_remote.sh

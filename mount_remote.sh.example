@@ -1,0 +1,4 @@
+#!/bin/sh
+
+echo "Mounting remote network share"
+docker exec -it l2tp-ipsec-vpn-samba mount -t cifs //example.com/Folder /mnt -o username=myuser,password=mypassword,domain=MYDOMAIN,uid=1000,gid=1000,forceuid,forcegid

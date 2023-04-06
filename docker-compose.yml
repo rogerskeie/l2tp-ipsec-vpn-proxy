@@ -1,6 +1,7 @@
 version: '3'
 services:
   vpn_proxy:
+    container_name: l2tp-ipsec-vpn-proxy
     build: .
     dns:
       - 1.1.1.1
@@ -14,12 +15,35 @@ services:
     ports:
       - ${PROXY_SOCKS5_PORT}:1080
       - ${PROXY_HTTP_PORT}:8040
+      - "137:137/udp"
+      - "138:138/udp"
+      - "139:139/tcp"
+      - "445:445/tcp"
     volumes:
       - $SHARED_FOLDER:/shared
     restart: always
     privileged: true
   socks5:
     image: serjs/go-socks5-proxy
+    container_name: l2tp-ipsec-vpn-socks5
     depends_on:
       - vpn_proxy
     network_mode: "service:vpn_proxy"
+  samba:
+    image: joebiellik/samba-server
+    container_name: l2tp-ipsec-vpn-samba
+    build:
+      context: .
+      dockerfile: samba.Dockerfile
+    depends_on:
+      - vpn_proxy
+    network_mode: "service:vpn_proxy"
+    cap_add:
+      - SYS_ADMIN
+    volumes:
+      - ./smb.conf:/etc/samba/smb.conf
+    environment:
+      - USERNAME=$SAMBA_USER
+      - PASSWORD=$SAMBA_PASSWORD
+      - UID=$SAMBA_UID
+      - GID=$SAMBA_GID
